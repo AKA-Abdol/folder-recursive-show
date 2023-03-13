@@ -1,5 +1,5 @@
-export interface DirectoryObject {
-  dir: string;
+export interface IDirectory {
+  parentDir?: string;
 }
 export interface FolderData {
   name: string;
