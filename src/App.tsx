@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { FolderData } from "./interfaces";
+import Folder from "./components/Folder";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Folder data={mockMainFolder} />
     </div>
   );
 }
+
+const mockMainFolder: FolderData = {
+  name: "main",
+  files: ["file_1", "file_2"],
+  folders: [
+    {
+      name: "folder_1",
+      files: ["subfile_1_1", "subfile_1_2"],
+      folders: [],
+    },
+    {
+      name: "folder_2",
+      files: ["subfile_2_1", "subfile_2_2"],
+      folders: [],
+    },
+  ],
+};
 
 export default App;
