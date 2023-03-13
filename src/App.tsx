@@ -4,8 +4,8 @@ import Folder from "./components/Folder";
 
 function App() {
   return (
-    <div>
-      <Folder data={mockMainFolder} />
+    <div className="w-full">
+      <Folder data={mockMainFolder} wrapperStyle="px-1 bg-gray-200" />
     </div>
   );
 }
