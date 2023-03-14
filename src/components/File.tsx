@@ -8,32 +8,23 @@ interface IFile extends IDirectory {
 export default function File({ name, parentDir }: IFile) {
   const setMainFolder = useSetRecoilState(mainFolderAtom);
   const onDelete = () => {
-    console.log("man injam");
-
     const pathList = parentDir?.split("\t") ?? [];
-    console.log("in data E:", pathList);
 
     setMainFolder((mainFolderData) => {
-      const newMainFolderData: FolderData = {
-        ...mainFolderData,
-        folders: [],
-      };
-      console.log(newMainFolderData);
-      let currentMainFolderData = mainFolderData;
+      const newMainFolderData = JSON.parse(
+        JSON.stringify(mainFolderData)
+      ) as FolderData;
+      let currentFolder = newMainFolderData;
       for (let i = 1; i < pathList.length; i++) {
         const nextFolderName = pathList[i];
-        newMainFolderData.folders = currentMainFolderData.folders.filter(
-          (subFolder) => subFolder.name !== nextFolderName
-        );
-        currentMainFolderData = currentMainFolderData.folders.filter(
+        currentFolder = currentFolder.folders.filter(
           (subFolder) => subFolder.name === nextFolderName
         )[0];
-        newMainFolderData.folders.push(currentMainFolderData);
       }
-      parentFolder.files = parentFolder.files.filter(
+      currentFolder.files = currentFolder.files.filter(
         (filename) => filename !== name
       );
-      return parentFolder;
+      return newMainFolderData;
     });
   };
   return (
