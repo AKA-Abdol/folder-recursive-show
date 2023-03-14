@@ -1,6 +1,7 @@
 import { useSetRecoilState } from "recoil";
-import { FolderData, IDirectory } from "../interfaces";
+import { IDirectory } from "../interfaces";
 import { mainFolderAtom } from "../atoms";
+import { FolderData } from "../interfaces/folder";
 
 interface IFile extends IDirectory {
   name: string;
@@ -33,10 +34,7 @@ export default function File({ name, parentDir }: IFile) {
         <p>{name}</p>
       </div>
       <div className="flex flex-row text-xs invisible group-hover:visible">
-        <p
-          className="hover:text-red-500 cursor-pointer"
-          onClick={onDelete}
-        >
+        <p className="hover:text-red-500 cursor-pointer" onClick={onDelete}>
           delete
         </p>
       </div>

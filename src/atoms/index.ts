@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { FolderData } from "../interfaces";
+import { FolderData } from "../interfaces/folder";
 
 const defaultMainFolder: FolderData = {
   name: "Main",
