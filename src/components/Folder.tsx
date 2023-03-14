@@ -1,6 +1,10 @@
 import { useRecoilState } from "recoil";
 import { IDirectory } from "../interfaces";
-import { FolderActionBarState, FolderData } from "../interfaces/folder";
+import {
+  FolderActionBarState,
+  FolderData,
+  FolderShowSubItemsState,
+} from "../interfaces/folder";
 import File from "./File";
 import { mainFolderAtom } from "../atoms";
 import { useState } from "react";
@@ -14,6 +18,8 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
   const [mainFolderData, setMainFolder] = useRecoilState(mainFolderAtom);
   const [actionBarState, setActionBarState] =
     useState<FolderActionBarState>("Normal");
+  const [subItemsShowState, setSubItemsShowState] =
+    useState<FolderShowSubItemsState>("Show");
   const createNameFormik = useFormik({
     initialValues: {
       inputName: "",
@@ -37,6 +43,7 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
             .includes(inputName)
         )
           onCreateFolder(inputName);
+        setSubItemsShowState("Show");
         resetForm();
       }
       setActionBarState("Normal");
@@ -92,7 +99,15 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
   return (
     <div className={`flex flex-col text-lg w-fit ${wrapperStyle}`}>
       <div className="hover:bg-gray-400 group flex flex-row justify-between items-center space-x-4">
-        <div>
+        <div
+          className="flex flex-row space-x-1 cursor-pointer"
+          onClick={() =>
+            setSubItemsShowState((currState) =>
+              currState === "Show" ? "Hidden" : "Show"
+            )
+          }
+        >
+          <p className="w-3">{subItemsShowState === "Show" ? "_" : "+"}</p>
           <p>{data.name}</p>
         </div>
         <>
@@ -102,13 +117,13 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
               className="flex flex-row text-xs space-x-2 invisible group-hover:visible"
             >
               <p
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-green-400"
                 onClick={() => setActionBarState("CreateFolder")}
               >
                 +folder
               </p>
               <p
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-green-400"
                 onClick={() => setActionBarState("CreateFile")}
               >
                 +file
@@ -175,20 +190,27 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
           )}
         </>
       </div>
-      <div className="ml-4">
-        {data.folders.map((folderData) => (
-          <Folder
-            data={folderData}
-            parentDir={parentDir ? `${parentDir}\t${data.name}` : data.name}
-          />
-        ))}
+      <div
+        className={`flex flex-row ${
+          subItemsShowState === "Hidden" ? "hidden" : "block"
+        }`}
+      >
+        <div className="w-4 border-l-2 border-gray-400"></div>
+        <div>
+          {data.folders.map((folderData) => (
+            <Folder
+              data={folderData}
+              parentDir={parentDir ? `${parentDir}\t${data.name}` : data.name}
+            />
+          ))}
 
-        {data.files.map((filename) => (
-          <File
-            name={filename}
-            parentDir={parentDir ? `${parentDir}\t${data.name}` : data.name}
-          />
-        ))}
+          {data.files.map((filename) => (
+            <File
+              name={filename}
+              parentDir={parentDir ? `${parentDir}\t${data.name}` : data.name}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

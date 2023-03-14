@@ -5,3 +5,5 @@ export interface FolderData {
 }
 
 export type FolderActionBarState = "CreateFile" | "CreateFolder" | "Normal";
+
+export type FolderShowSubItemsState = "Show" | "Hidden";
