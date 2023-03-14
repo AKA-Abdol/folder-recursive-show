@@ -32,9 +32,9 @@ export default function File({ name, parentDir }: IFile) {
       <div>
         <p>{name}</p>
       </div>
-      <div className="flex flex-row text-xs">
+      <div className="flex flex-row text-xs invisible group-hover:visible">
         <p
-          className="invisible group-hover:visible hover:text-red-500 cursor-pointer"
+          className="hover:text-red-500 cursor-pointer"
           onClick={onDelete}
         >
           delete
