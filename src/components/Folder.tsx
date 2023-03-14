@@ -4,6 +4,7 @@ import { FolderActionBarState, FolderData } from "../interfaces/folder";
 import File from "./File";
 import { mainFolderAtom } from "../atoms";
 import { useState } from "react";
+import { useFormik } from "formik";
 
 interface IFolder extends IDirectory {
   data: FolderData;
@@ -13,7 +14,34 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
   const [mainFolderData, setMainFolder] = useRecoilState(mainFolderAtom);
   const [actionBarState, setActionBarState] =
     useState<FolderActionBarState>("Normal");
+  const createNameFormik = useFormik({
+    initialValues: {
+      inputName: "",
+    },
+    onSubmit: ({ inputName }, { resetForm }) => {
+      if (inputName) {
+        const { newData, parent } = getParentDir();
+        const currentFolder =
+          parent.folders.filter((folder) => folder.name === data.name)[0] ??
+          parent;
 
+        if (
+          actionBarState === "CreateFile" &&
+          !currentFolder.files.includes(inputName)
+        )
+          onCreateFile(inputName);
+        if (
+          actionBarState === "CreateFolder" &&
+          !currentFolder.folders
+            .map((folder) => folder.name)
+            .includes(inputName)
+        )
+          onCreateFolder(inputName);
+        resetForm();
+      }
+      setActionBarState("Normal");
+    },
+  });
   const getParentDir = () => {
     const pathList = parentDir?.split("\t") ?? [];
 
@@ -40,12 +68,12 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
     setMainFolder(newData);
   };
 
-  const onCreateFolder = () => {
+  const onCreateFolder = (folderName: string) => {
     const { newData, parent } = getParentDir();
     const currentFolder =
       parent.folders.filter((folder) => folder.name === data.name)[0] ?? parent;
     const newFolder: FolderData = {
-      name: "new-folder",
+      name: folderName,
       files: [],
       folders: [],
     };
@@ -53,11 +81,11 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
     setMainFolder(newData);
   };
 
-  const onCreateFile = () => {
+  const onCreateFile = (filename: string) => {
     const { newData, parent } = getParentDir();
     const currentFolder =
       parent.folders.filter((folder) => folder.name === data.name)[0] ?? parent;
-    currentFolder.files = [...currentFolder.files, "new-file"];
+    currentFolder.files = [...currentFolder.files, filename];
     setMainFolder(newData);
   };
 
@@ -99,19 +127,21 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
               key={"action-bar"}
               className="flex flex-row text-xs space-x-2 items-center"
             >
-              <input
-                type="text"
-                placeholder=""
-                className="input input-bordered input-xs border-red-400 w-24"
-              />
+              <form onSubmit={createNameFormik.handleSubmit}>
+                <input
+                  id="inputName"
+                  name="inputName"
+                  type="text"
+                  placeholder=""
+                  className="input input-bordered input-xs border-red-400 w-24"
+                  onChange={createNameFormik.handleChange}
+                  value={createNameFormik.values.inputName}
+                />
+              </form>
               <div className="flex flex-row space-x-1">
                 <button
                   className="btn btn-success btn-square btn-xs px-0"
-                  onClick={() => {
-                    if (actionBarState === "CreateFile") onCreateFile();
-                    if (actionBarState === "CreateFolder") onCreateFolder();
-                    setActionBarState("Normal");
-                  }}
+                  onClick={() => createNameFormik.handleSubmit()}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
