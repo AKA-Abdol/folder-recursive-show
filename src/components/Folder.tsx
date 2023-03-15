@@ -9,6 +9,7 @@ import File from "./File";
 import { mainFolderAtom } from "../atoms";
 import { useState } from "react";
 import { useFormik } from "formik";
+import { IoIosArrowDropdown, IoIosArrowDropright } from "react-icons/io";
 
 interface IFolder extends IDirectory {
   data: FolderData;
@@ -98,16 +99,20 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
 
   return (
     <div className={`flex flex-col text-lg w-fit ${wrapperStyle}`}>
-      <div className="hover:bg-gray-400 group flex flex-row justify-between items-center space-x-4">
-        <div
-          className="flex flex-row space-x-1 cursor-pointer"
-          onClick={() =>
-            setSubItemsShowState((currState) =>
-              currState === "Show" ? "Hidden" : "Show"
-            )
-          }
-        >
-          <p className="w-3">{subItemsShowState === "Show" ? "_" : "+"}</p>
+      <div
+        className="hover:bg-gray-400 group flex flex-row justify-between items-center space-x-4 cursor-pointer"
+        onClick={() =>
+          setSubItemsShowState((currState) =>
+            currState === "Show" ? "Hidden" : "Show"
+          )
+        }
+      >
+        <div className="flex flex-row space-x-1 items-center">
+          {subItemsShowState === "Hidden" ? (
+            <IoIosArrowDropright />
+          ) : (
+            <IoIosArrowDropdown />
+          )}
           <p>{data.name}</p>
         </div>
         <>
