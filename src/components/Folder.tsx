@@ -99,15 +99,15 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
 
   return (
     <div className={`flex flex-col text-lg w-fit ${wrapperStyle}`}>
-      <div
-        className="hover:bg-gray-400 group flex flex-row justify-between items-center space-x-4 cursor-pointer"
-        onClick={() =>
-          setSubItemsShowState((currState) =>
-            currState === "Show" ? "Hidden" : "Show"
-          )
-        }
-      >
-        <div className="flex flex-row space-x-1 items-center">
+      <div className="hover:bg-gray-400 group flex flex-row justify-between items-center space-x-4">
+        <div
+          className="flex flex-row space-x-1 items-center cursor-pointer"
+          onClick={() =>
+            setSubItemsShowState((currState) =>
+              currState === "Show" ? "Hidden" : "Show"
+            )
+          }
+        >
           {subItemsShowState === "Hidden" ? (
             <IoIosArrowDropright />
           ) : (
@@ -123,13 +123,19 @@ export default function Folder({ data, wrapperStyle, parentDir }: IFolder) {
             >
               <p
                 className="cursor-pointer hover:text-green-400"
-                onClick={() => setActionBarState("CreateFolder")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActionBarState("CreateFolder");
+                }}
               >
                 +folder
               </p>
               <p
                 className="cursor-pointer hover:text-green-400"
-                onClick={() => setActionBarState("CreateFile")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActionBarState("CreateFile");
+                }}
               >
                 +file
               </p>
